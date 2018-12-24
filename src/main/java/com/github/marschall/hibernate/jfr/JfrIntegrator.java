@@ -23,6 +23,18 @@ public class JfrIntegrator implements Integrator {
       .appendListener(listener);
     eventListenerRegistry.getEventListenerGroup(EventType.SAVE_UPDATE)
       .appendListener(listener);
+    eventListenerRegistry.getEventListenerGroup(EventType.DELETE)
+      .appendListener(listener);
+    eventListenerRegistry.getEventListenerGroup(EventType.PERSIST)
+      .appendListener(listener);
+    eventListenerRegistry.getEventListenerGroup(EventType.FLUSH)
+    .appendListener(listener);
+    eventListenerRegistry.getEventListenerGroup(EventType.FLUSH_ENTITY)
+      .appendListener(listener);
+    eventListenerRegistry.getEventListenerGroup(EventType.AUTO_FLUSH)
+      .appendListener(listener);
+    eventListenerRegistry.getEventListenerGroup(EventType.CLEAR)
+      .appendListener(listener);
   }
 
   @Override

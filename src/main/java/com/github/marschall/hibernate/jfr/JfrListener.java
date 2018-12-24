@@ -3,7 +3,6 @@ package com.github.marschall.hibernate.jfr;
 import java.util.Map;
 import java.util.Set;
 
-import org.hibernate.HibernateException;
 import org.hibernate.event.spi.AutoFlushEvent;
 import org.hibernate.event.spi.AutoFlushEventListener;
 import org.hibernate.event.spi.ClearEvent;
@@ -16,6 +15,8 @@ import org.hibernate.event.spi.EvictEvent;
 import org.hibernate.event.spi.EvictEventListener;
 import org.hibernate.event.spi.FlushEntityEvent;
 import org.hibernate.event.spi.FlushEntityEventListener;
+import org.hibernate.event.spi.FlushEvent;
+import org.hibernate.event.spi.FlushEventListener;
 import org.hibernate.event.spi.InitializeCollectionEvent;
 import org.hibernate.event.spi.InitializeCollectionEventListener;
 import org.hibernate.event.spi.LoadEvent;
@@ -70,37 +71,37 @@ import jdk.jfr.Label;
 import jdk.jfr.StackTrace;
 
 public class JfrListener implements
-
-AutoFlushEventListener,
-ClearEventListener,
-DeleteEventListener,
-DirtyCheckEventListener,
-EvictEventListener,
-FlushEntityEventListener,
-InitializeCollectionEventListener,
-LoadEventListener,
-LockEventListener,
-MergeEventListener,
-PersistEventListener,
-PreCollectionRecreateEventListener,
-PreCollectionRemoveEventListener,
-PreCollectionUpdateEventListener,
-PostCollectionRemoveEventListener,
-PostCollectionUpdateEventListener,
-PostCommitDeleteEventListener,
-PostCommitInsertEventListener,
-PostCommitUpdateEventListener,
-PostDeleteEventListener,
-PreInsertEventListener,
-PreLoadEventListener,
-PreUpdateEventListener,
-PostInsertEventListener,
-PostLoadEventListener,
-PostUpdateEventListener,
-RefreshEventListener,
-ReplicateEventListener,
-ResolveNaturalIdEventListener,
-SaveOrUpdateEventListener {
+    AutoFlushEventListener,
+    ClearEventListener,
+    DeleteEventListener,
+    DirtyCheckEventListener,
+    EvictEventListener,
+    FlushEntityEventListener,
+    FlushEventListener,
+    InitializeCollectionEventListener,
+    LoadEventListener,
+    LockEventListener,
+    MergeEventListener,
+    PersistEventListener,
+    PreCollectionRecreateEventListener,
+    PreCollectionRemoveEventListener,
+    PreCollectionUpdateEventListener,
+    PostCollectionRemoveEventListener,
+    PostCollectionUpdateEventListener,
+    PostCommitDeleteEventListener,
+    PostCommitInsertEventListener,
+    PostCommitUpdateEventListener,
+    PostDeleteEventListener,
+    PreInsertEventListener,
+    PreLoadEventListener,
+    PreUpdateEventListener,
+    PostInsertEventListener,
+    PostLoadEventListener,
+    PostUpdateEventListener,
+    RefreshEventListener,
+    ReplicateEventListener,
+    ResolveNaturalIdEventListener,
+    SaveOrUpdateEventListener {
 
   @Override
   public boolean requiresPostCommitHanding(EntityPersister persister) {
@@ -109,32 +110,32 @@ SaveOrUpdateEventListener {
   }
 
   @Override
-  public void onSaveOrUpdate(SaveOrUpdateEvent event) throws HibernateException {
+  public void onSaveOrUpdate(SaveOrUpdateEvent event) {
     var jfrEvent = new JfrSaveOrUpdateEvent();
     jfrEvent.entityName = event.getEntityName();
     jfrEvent.commit();
   }
 
   @Override
-  public void onResolveNaturalId(ResolveNaturalIdEvent event) throws HibernateException {
+  public void onResolveNaturalId(ResolveNaturalIdEvent event) {
     // TODO Auto-generated method stub
 
   }
 
   @Override
-  public void onReplicate(ReplicateEvent event) throws HibernateException {
+  public void onReplicate(ReplicateEvent event) {
     // TODO Auto-generated method stub
 
   }
 
   @Override
-  public void onRefresh(RefreshEvent event) throws HibernateException {
+  public void onRefresh(RefreshEvent event) {
     // TODO Auto-generated method stub
 
   }
 
   @Override
-  public void onRefresh(RefreshEvent event, Map refreshedAlready) throws HibernateException {
+  public void onRefresh(RefreshEvent event, Map refreshedAlready) {
     // TODO Auto-generated method stub
 
   }
@@ -230,37 +231,37 @@ SaveOrUpdateEventListener {
   }
 
   @Override
-  public void onPersist(PersistEvent event) throws HibernateException {
-    // TODO Auto-generated method stub
-
+  public void onPersist(PersistEvent event) {
+    var jfrEvent = new JfrPersistEvent();
+    jfrEvent.entityName = event.getEntityName();
+    jfrEvent.commit();
   }
 
   @Override
-  public void onPersist(PersistEvent event, Map createdAlready) throws HibernateException {
-    // TODO Auto-generated method stub
-
+  public void onPersist(PersistEvent event, Map createdAlready) {
+    this.onPersist(event);
   }
 
   @Override
-  public void onMerge(MergeEvent event) throws HibernateException {
+  public void onMerge(MergeEvent event) {
     var jfrEvent = new JfrMergeEvent();
     jfrEvent.entityName = event.getEntityName();
     jfrEvent.commit();
   }
 
   @Override
-  public void onMerge(MergeEvent event, Map copiedAlready) throws HibernateException {
+  public void onMerge(MergeEvent event, Map copiedAlready) {
     this.onMerge(event);
   }
 
   @Override
-  public void onLock(LockEvent event) throws HibernateException {
+  public void onLock(LockEvent event) {
     // TODO Auto-generated method stub
 
   }
 
   @Override
-  public void onLoad(LoadEvent event, LoadType loadType) throws HibernateException {
+  public void onLoad(LoadEvent event, LoadType loadType) {
     var jfrEvent = new JfrLoadEvent();
     jfrEvent.entityClassName = event.getEntityClassName();
     jfrEvent.loadType = loadType.getName();
@@ -269,51 +270,61 @@ SaveOrUpdateEventListener {
   }
 
   @Override
-  public void onInitializeCollection(InitializeCollectionEvent event) throws HibernateException {
+  public void onInitializeCollection(InitializeCollectionEvent event) {
     // TODO Auto-generated method stub
 
   }
 
   @Override
-  public void onFlushEntity(FlushEntityEvent event) throws HibernateException {
+  public void onFlushEntity(FlushEntityEvent event) {
+    var jfrEvent = new JfrFlushEntityEvent();
+    jfrEvent.entityName = event.getEntityEntry().getEntityName();
+    jfrEvent.commit();
+  }
+
+  @Override
+  public void onFlush(FlushEvent event) {
+    var jfrEvent = new JfrFlushEvent();
+    jfrEvent.numberOfEntitiesProcessed = event.getNumberOfEntitiesProcessed();
+    jfrEvent.numberOfCollectionsProcessed = event.getNumberOfCollectionsProcessed();
+    jfrEvent.commit();
+  }
+
+  @Override
+  public void onEvict(EvictEvent event) {
     // TODO Auto-generated method stub
 
   }
 
   @Override
-  public void onEvict(EvictEvent event) throws HibernateException {
+  public void onDirtyCheck(DirtyCheckEvent event) {
     // TODO Auto-generated method stub
 
   }
 
   @Override
-  public void onDirtyCheck(DirtyCheckEvent event) throws HibernateException {
-    // TODO Auto-generated method stub
-
+  public void onDelete(DeleteEvent event) {
+    var jfrEvent = new JfrDeleteEvent();
+    jfrEvent.entityName = event.getEntityName();
+    jfrEvent.commit();
   }
 
   @Override
-  public void onDelete(DeleteEvent event) throws HibernateException {
-    // TODO Auto-generated method stub
-
-  }
-
-  @Override
-  public void onDelete(DeleteEvent event, Set transientEntities) throws HibernateException {
-    // TODO Auto-generated method stub
-
+  public void onDelete(DeleteEvent event, Set transientEntities) {
+    this.onDelete(event);
   }
 
   @Override
   public void onClear(ClearEvent event) {
-    // TODO Auto-generated method stub
-
+    var jfrEvent = new JfrClearEvent();
+    jfrEvent.commit();
   }
 
   @Override
-  public void onAutoFlush(AutoFlushEvent event) throws HibernateException {
-    // TODO Auto-generated method stub
-
+  public void onAutoFlush(AutoFlushEvent event) {
+    var jfrEvent = new JfrAutoFlushEvent();
+    jfrEvent.flushRequired = event.isFlushRequired();
+    jfrEvent.commit();
   }
 
   @Label("Load")
@@ -331,28 +342,100 @@ SaveOrUpdateEventListener {
     private String loadType;
 
   }
-  
+
   @Label("Merge")
   @Description("A Hibernate Merge Event generated by merge() and saveOrUpdateCopy()")
   @Category("Hibernate")
   @StackTrace(false)
   static class JfrMergeEvent extends Event {
-    
+
     @Label("Entity Name")
     @Description("The name of the entity being merged")
     private String entityName;
-    
+
   }
-  
+
   @Label("SaveOrUpdate")
   @Description("A Hibernate Save or Update Event generated by saveOrUpdate()")
   @Category("Hibernate")
   @StackTrace(false)
   static class JfrSaveOrUpdateEvent extends Event {
-    
+
     @Label("Entity Name")
     @Description("The name of the entity being saved or updated")
     private String entityName;
+
+  }
+
+  @Label("Delete")
+  @Description("A Hibernate Delete Even")
+  @Category("Hibernate")
+  @StackTrace(false)
+  static class JfrDeleteEvent extends Event {
+
+    @Label("Entity Name")
+    @Description("The name of the entity being deleted")
+    private String entityName;
+
+  }
+
+  @Label("Persist")
+  @Description("A Hibernate Persist Event generted by persist()")
+  @Category("Hibernate")
+  @StackTrace(false)
+  static class JfrPersistEvent extends Event {
+
+    @Label("Entity Name")
+    @Description("The name of the entity being persisted")
+    private String entityName;
+
+  }
+
+  @Label("Flush Entity")
+  @Description("A Hibernate Flush Entity Event")
+  @Category("Hibernate")
+  @StackTrace(false)
+  static class JfrFlushEntityEvent extends Event {
+
+    @Label("Entity Name")
+    @Description("The name of the entity being flushed")
+    private String entityName;
+
+  }
+  
+  @Label("Flush")
+  @Description("A Hibernate Flush Event")
+  @Category("Hibernate")
+  @StackTrace(false)
+  static class JfrFlushEvent extends Event {
+    
+    @Label("#Entities Processed")
+    @Description("The Number of Entities Processed")
+    private int numberOfEntitiesProcessed;
+    
+    @Label("#Collections Processed")
+    @Description("The Number of Collections Processed")
+    private int numberOfCollectionsProcessed;
+    
+  }
+  
+  @Label("Auto Flush")
+  @Description("A Hibernate Event generated by auto-flushing of a Session")
+  @Category("Hibernate")
+  @StackTrace(false)
+  static class JfrAutoFlushEvent extends Event {
+    
+    @Label("Flush Required")
+    @Description("Whether a Flush is Required")
+    private boolean flushRequired;
+    
+  }
+  
+  @Label("Clar")
+  @Description("A Hibernate Event generated by clear()")
+  @Category("Hibernate")
+  @StackTrace(false)
+  static class JfrClearEvent extends Event {
     
   }
 
