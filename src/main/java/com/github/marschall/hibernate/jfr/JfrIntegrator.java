@@ -13,12 +13,16 @@ public class JfrIntegrator implements Integrator {
   public void integrate(Metadata metadata, SessionFactoryImplementor sessionFactory,
       SessionFactoryServiceRegistry serviceRegistry) {
     
-    EventListenerRegistry eventListenerRegistry = 
+    var eventListenerRegistry = 
         serviceRegistry.getService(EventListenerRegistry.class);
     
-    eventListenerRegistry.getEventListenerGroup(EventType.SAVE)
-      .appendListener(new JfrListener());
-    
+    var listener = new JfrListener();
+    eventListenerRegistry.getEventListenerGroup(EventType.LOAD)
+      .appendListener(listener);
+    eventListenerRegistry.getEventListenerGroup(EventType.MERGE)
+      .appendListener(listener);
+    eventListenerRegistry.getEventListenerGroup(EventType.SAVE_UPDATE)
+      .appendListener(listener);
   }
 
   @Override
