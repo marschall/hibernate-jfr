@@ -1,5 +1,7 @@
 package com.github.marschall.hibernate.jfr;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.math.BigInteger;
 
 import javax.persistence.EntityManager;
@@ -17,12 +19,34 @@ class JfrListenerTest {
   private EntityManager entityManager;
 
   @Test
-  void test() {
-    var post = new Post();
-    post.setId(BigInteger.valueOf(3L));
-    post.setTitle("Book 3");
+  void find() {
+    var first = this.entityManager.find(Post.class, BigInteger.valueOf(1L));
+    first.setTitle("erstor");
+  }
 
-    this.entityManager.persist(post);
+  @Test
+  void delete() {
+    var first = this.entityManager.find(Post.class, BigInteger.valueOf(1L));
+    this.entityManager.remove(first);
+  }
+
+  @Test
+  void merge() {
+    var second = new Post();
+    second.setId(BigInteger.valueOf(2L));
+    second.setTitle("close but no cigar");
+    var merged = this.entityManager.merge(second);
+
+    assertNotNull(merged);
+  }
+
+  @Test
+  void persist() {
+    var post3 = new Post();
+    post3.setId(BigInteger.valueOf(3L));
+    post3.setTitle("Book 3");
+
+    this.entityManager.persist(post3);
   }
 
 }
