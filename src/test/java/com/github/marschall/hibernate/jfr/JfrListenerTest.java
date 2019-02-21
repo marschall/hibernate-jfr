@@ -31,6 +31,18 @@ class JfrListenerTest {
   }
 
   @Test
+  void detach() {
+    var first = this.entityManager.find(Post.class, BigInteger.valueOf(1L));
+    this.entityManager.detach(first);
+  }
+
+  @Test
+  void update() {
+    var first = this.entityManager.find(Post.class, BigInteger.valueOf(1L));
+    first.setTitle("Updated: " + first.getTitle());
+  }
+
+  @Test
   void merge() {
     var second = new Post();
     second.setId(BigInteger.valueOf(2L));
