@@ -3,7 +3,6 @@ package com.github.marschall.hibernate.jfr;
 import java.util.Map;
 import java.util.Set;
 
-import org.hibernate.LockMode;
 import org.hibernate.event.spi.AutoFlushEvent;
 import org.hibernate.event.spi.AutoFlushEventListener;
 import org.hibernate.event.spi.ClearEvent;
@@ -70,39 +69,40 @@ import jdk.jfr.Description;
 import jdk.jfr.Event;
 import jdk.jfr.Label;
 import jdk.jfr.StackTrace;
+import jdk.jfr.Timespan;
 
 public class JfrListener implements
-    AutoFlushEventListener,
-    ClearEventListener,
-    DeleteEventListener,
-    DirtyCheckEventListener,
-    EvictEventListener,
-    FlushEntityEventListener,
-    FlushEventListener,
-    InitializeCollectionEventListener,
-    LoadEventListener,
-    LockEventListener,
-    MergeEventListener,
-    PersistEventListener,
-    PreCollectionRecreateEventListener,
-    PreCollectionRemoveEventListener,
-    PreCollectionUpdateEventListener,
-    PostCollectionRemoveEventListener,
-    PostCollectionUpdateEventListener,
-    PostCommitDeleteEventListener,
-    PostCommitInsertEventListener,
-    PostCommitUpdateEventListener,
-    PostDeleteEventListener,
-    PreInsertEventListener,
-    PreLoadEventListener,
-    PreUpdateEventListener,
-    PostInsertEventListener,
-    PostLoadEventListener,
-    PostUpdateEventListener,
-    RefreshEventListener,
-    ReplicateEventListener,
-    ResolveNaturalIdEventListener,
-    SaveOrUpdateEventListener {
+AutoFlushEventListener,
+ClearEventListener,
+DeleteEventListener,
+DirtyCheckEventListener,
+EvictEventListener,
+FlushEntityEventListener,
+FlushEventListener,
+InitializeCollectionEventListener,
+LoadEventListener,
+LockEventListener,
+MergeEventListener,
+PersistEventListener,
+PreCollectionRecreateEventListener,
+PreCollectionRemoveEventListener,
+PreCollectionUpdateEventListener,
+PostCollectionRemoveEventListener,
+PostCollectionUpdateEventListener,
+PostCommitDeleteEventListener,
+PostCommitInsertEventListener,
+PostCommitUpdateEventListener,
+PostDeleteEventListener,
+PreInsertEventListener,
+PreLoadEventListener,
+PreUpdateEventListener,
+PostInsertEventListener,
+PostLoadEventListener,
+PostUpdateEventListener,
+RefreshEventListener,
+ReplicateEventListener,
+ResolveNaturalIdEventListener,
+SaveOrUpdateEventListener {
 
   @Override
   public boolean requiresPostCommitHanding(EntityPersister persister) {
@@ -123,26 +123,35 @@ public class JfrListener implements
 
   @Override
   public void onResolveNaturalId(ResolveNaturalIdEvent event) {
-    // TODO Auto-generated method stub
-
+    var jfrEvent = new JfrResolveNaturalIdEvent();
+    jfrEvent.entityName = event.getEntityName();
+    jfrEvent.lockMode = event.getLockOptions().getLockMode().toExternalForm();
+    jfrEvent.lockTimeout = event.getLockOptions().getTimeOut();
+    jfrEvent.lockScope = event.getLockOptions().getScope();
+    jfrEvent.commit();
   }
 
   @Override
   public void onReplicate(ReplicateEvent event) {
-    // TODO Auto-generated method stub
-
+    var jfrEvent = new JfrReplicateEvent();
+    jfrEvent.entityName = event.getEntityName();
+    jfrEvent.replicationMode = event.getReplicationMode().name();
+    jfrEvent.commit();
   }
 
   @Override
   public void onRefresh(RefreshEvent event) {
-    // TODO Auto-generated method stub
-
+    var jfrEvent = new JfrRefreshEvent();
+    jfrEvent.entityName = event.getEntityName();
+    jfrEvent.lockMode = event.getLockMode().toExternalForm();
+    jfrEvent.lockTimeout = event.getLockTimeout();
+    jfrEvent.lockScope = event.getLockScope();
+    jfrEvent.commit();
   }
 
   @Override
   public void onRefresh(RefreshEvent event, Map refreshedAlready) {
-    // TODO Auto-generated method stub
-
+    onRefresh(event);
   }
 
   @Override
@@ -339,7 +348,7 @@ public class JfrListener implements
     jfrEvent.flushRequired = event.isFlushRequired();
     jfrEvent.commit();
   }
-  
+
   @Label("Lock")
   @Description("A Hibernate Lock Event")
   @Category("Hibernate")
@@ -356,6 +365,72 @@ public class JfrListener implements
 
     @Label("Lock Timeout")
     @Description("The lock timeout")
+    @Timespan(Timespan.MILLISECONDS)
+    private int lockTimeout;
+
+    @Label("Lock Scope")
+    @Description("The lock scope")
+    private boolean lockScope;
+
+  }
+  @Label("Resolve Natural Id")
+  @Description("A Hibernate Resolve Natural Id Event")
+  @Category("Hibernate")
+  @StackTrace(false)
+  static class JfrResolveNaturalIdEvent extends Event {
+    
+    @Label("Entity Name")
+    @Description("The name of the entity being locked")
+    private String entityName;
+    
+    @Label("Lock Mode")
+    @Description("The lock mode")
+    private String lockMode;
+    
+    @Label("Lock Timeout")
+    @Description("The lock timeout")
+    @Timespan(Timespan.MILLISECONDS)
+    private int lockTimeout;
+    
+    @Label("Lock Scope")
+    @Description("The lock scope")
+    private boolean lockScope;
+    
+  }
+
+  @Label("Replicate")
+  @Description("A Hibernate Replicate Event")
+  @Category("Hibernate")
+  @StackTrace(false)
+  static class JfrReplicateEvent extends Event {
+
+    @Label("Entity Name")
+    @Description("The name of the entity being refreshed")
+    private String entityName;
+
+    @Label("Replication Mode")
+    @Description("The replication mode")
+    private String replicationMode;
+
+  }
+
+  @Label("Refresh")
+  @Description("A Hibernate Refresh Event")
+  @Category("Hibernate")
+  @StackTrace(false)
+  static class JfrRefreshEvent extends Event {
+
+    @Label("Entity Name")
+    @Description("The name of the entity being refreshed")
+    private String entityName;
+
+    @Label("Lock Mode")
+    @Description("The lock mode")
+    private String lockMode;
+
+    @Label("Lock Timeout")
+    @Description("The lock timeout")
+    @Timespan(Timespan.MILLISECONDS)
     private int lockTimeout;
 
     @Label("Lock Scope")
