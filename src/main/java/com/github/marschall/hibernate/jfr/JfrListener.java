@@ -3,6 +3,7 @@ package com.github.marschall.hibernate.jfr;
 import java.util.Map;
 import java.util.Set;
 
+import org.hibernate.LockMode;
 import org.hibernate.event.spi.AutoFlushEvent;
 import org.hibernate.event.spi.AutoFlushEventListener;
 import org.hibernate.event.spi.ClearEvent;
@@ -105,7 +106,11 @@ public class JfrListener implements
 
   @Override
   public boolean requiresPostCommitHanding(EntityPersister persister) {
-    // TODO Auto-generated method stub
+    return false;
+  }
+
+  @Override
+  public boolean requiresPostCommitHandling(EntityPersister persister) {
     return false;
   }
 
@@ -257,8 +262,12 @@ public class JfrListener implements
 
   @Override
   public void onLock(LockEvent event) {
-    // TODO Auto-generated method stub
-
+    var jfrEvent = new JfrLockEvent();
+    jfrEvent.entityName = event.getEntityName();
+    jfrEvent.lockMode = event.getLockMode().toExternalForm();
+    jfrEvent.lockTimeout = event.getLockTimeout();
+    jfrEvent.lockScope = event.getLockScope();
+    jfrEvent.commit();
   }
 
   @Override
@@ -329,6 +338,30 @@ public class JfrListener implements
     var jfrEvent = new JfrAutoFlushEvent();
     jfrEvent.flushRequired = event.isFlushRequired();
     jfrEvent.commit();
+  }
+  
+  @Label("Lock")
+  @Description("A Hibernate Lock Event")
+  @Category("Hibernate")
+  @StackTrace(false)
+  static class JfrLockEvent extends Event {
+
+    @Label("Entity Name")
+    @Description("The name of the entity being locked")
+    private String entityName;
+
+    @Label("Lock Mode")
+    @Description("The lock mode")
+    private String lockMode;
+
+    @Label("Lock Timeout")
+    @Description("The lock timeout")
+    private int lockTimeout;
+
+    @Label("Lock Scope")
+    @Description("The lock scope")
+    private boolean lockScope;
+
   }
 
   @Label("Load")
