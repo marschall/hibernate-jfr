@@ -7,6 +7,9 @@ import org.hibernate.event.spi.EventType;
 import org.hibernate.integrator.spi.Integrator;
 import org.hibernate.service.spi.SessionFactoryServiceRegistry;
 
+/**
+ * Registers a {@link JfrListener} for various Hibernate events.
+ */
 public class JfrIntegrator implements Integrator {
 
   @Override
@@ -55,7 +58,7 @@ public class JfrIntegrator implements Integrator {
 
   @Override
   public void disintegrate(SessionFactoryImplementor sessionFactory, SessionFactoryServiceRegistry serviceRegistry) {
-
+    // nothing to do
   }
 
 }

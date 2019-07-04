@@ -71,6 +71,9 @@ import jdk.jfr.Label;
 import jdk.jfr.StackTrace;
 import jdk.jfr.Timespan;
 
+/**
+ * Listens for various Hibernate events and generates JFR events.
+ */
 public class JfrListener implements
     AutoFlushEventListener,
     ClearEventListener,
