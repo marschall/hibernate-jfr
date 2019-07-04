@@ -154,7 +154,7 @@ public class JfrListener implements
 
   @Override
   public void onRefresh(RefreshEvent event, Map refreshedAlready) {
-    onRefresh(event);
+    this.onRefresh(event);
   }
 
   @Override
@@ -381,24 +381,24 @@ public class JfrListener implements
   @Category("Hibernate")
   @StackTrace(false)
   static class JfrResolveNaturalIdEvent extends Event {
-    
+
     @Label("Entity Name")
     @Description("The name of the entity being locked")
     private String entityName;
-    
+
     @Label("Lock Mode")
     @Description("The lock mode")
     private String lockMode;
-    
+
     @Label("Lock Timeout")
     @Description("The lock timeout")
     @Timespan(Timespan.MILLISECONDS)
     private int lockTimeout;
-    
+
     @Label("Lock Scope")
     @Description("The lock scope")
     private boolean lockScope;
-    
+
   }
 
   @Label("Replicate")
