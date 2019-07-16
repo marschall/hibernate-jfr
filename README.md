@@ -12,7 +12,7 @@ The project uses a Hibernate integrator so simply adding the dependency is enoug
 <dependency>
   <groupId>com.github.marschall</groupId>
   <artifactId>hibernate-jfr</artifactId>
-  <version>0.1.0</version>
+  <version>0.2.0</version>
 </dependency>
 ```
 
