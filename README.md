@@ -1,4 +1,4 @@
-Hibernate JFR [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.marschall/hibernate-jfr/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.marschall/hibernate-jfr) [![Javadocs](https://www.javadoc.io/badge/com.github.marschall/hibernate-jfr.svg)](https://www.javadoc.io/doc/com.github.marschall/hibernate-jfr)
+Hibernate JFR [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.marschall/hibernate-jfr/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.marschall/hibernate-jfr) [![Javadocs](https://www.javadoc.io/badge/com.github.marschall/hibernate-jfr.svg)](https://www.javadoc.io/doc/com.github.marschall/hibernate-jfr) [![Build Status](https://travis-ci.org/marschall/hibernate-jfr.svg?branch=master)](https://travis-ci.org/marschall/hibernate-jfr)
 =============
 
 A Hiberante listener that generates JFR events.
