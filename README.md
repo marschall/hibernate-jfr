@@ -6,15 +6,22 @@ A Hiberante listener that generates JFR events.
 Usage
 -----
 
-The project uses a Hibernate integrator so simply adding the dependency is enough.
+The project uses a Hibernate integrator so simply adding the dependency
 
 ```xml
 <dependency>
   <groupId>com.github.marschall</groupId>
   <artifactId>hibernate-jfr</artifactId>
-  <version>0.2.0</version>
+  <version>0.3.0</version>
 </dependency>
 ```
+
+And set the `hibernate.session_factory.statement_inspector` propert to `com.github.marschall.hibernate.jfr.JfrStatementInspector` for example using
+
+```xml
+<property name="hibernate.session_factory.statement_inspector" value="com.github.marschall.hibernate.jfr.JfrStatementInspector" />
+```
+
 
 You can generate a flight recording using something like this
 
