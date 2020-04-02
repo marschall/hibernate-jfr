@@ -13,7 +13,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 @SpringJUnitConfig(classes = H2Configuration.class)
 @Transactional
-class JfrListenerTest {
+class HibernateJfrTest {
 
   @PersistenceContext
   private EntityManager entityManager;
