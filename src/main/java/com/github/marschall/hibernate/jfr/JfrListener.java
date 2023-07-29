@@ -1,12 +1,10 @@
 package com.github.marschall.hibernate.jfr;
 
-import java.util.Map;
-import java.util.Set;
-
 import org.hibernate.event.spi.AutoFlushEvent;
 import org.hibernate.event.spi.AutoFlushEventListener;
 import org.hibernate.event.spi.ClearEvent;
 import org.hibernate.event.spi.ClearEventListener;
+import org.hibernate.event.spi.DeleteContext;
 import org.hibernate.event.spi.DeleteEvent;
 import org.hibernate.event.spi.DeleteEventListener;
 import org.hibernate.event.spi.DirtyCheckEvent;
@@ -23,8 +21,10 @@ import org.hibernate.event.spi.LoadEvent;
 import org.hibernate.event.spi.LoadEventListener;
 import org.hibernate.event.spi.LockEvent;
 import org.hibernate.event.spi.LockEventListener;
+import org.hibernate.event.spi.MergeContext;
 import org.hibernate.event.spi.MergeEvent;
 import org.hibernate.event.spi.MergeEventListener;
+import org.hibernate.event.spi.PersistContext;
 import org.hibernate.event.spi.PersistEvent;
 import org.hibernate.event.spi.PersistEventListener;
 import org.hibernate.event.spi.PostCollectionRemoveEvent;
@@ -54,6 +54,7 @@ import org.hibernate.event.spi.PreLoadEvent;
 import org.hibernate.event.spi.PreLoadEventListener;
 import org.hibernate.event.spi.PreUpdateEvent;
 import org.hibernate.event.spi.PreUpdateEventListener;
+import org.hibernate.event.spi.RefreshContext;
 import org.hibernate.event.spi.RefreshEvent;
 import org.hibernate.event.spi.RefreshEventListener;
 import org.hibernate.event.spi.ReplicateEvent;
@@ -106,12 +107,7 @@ public class JfrListener implements
     ReplicateEventListener,
     ResolveNaturalIdEventListener,
     SaveOrUpdateEventListener {
-
-  @Override
-  public boolean requiresPostCommitHanding(EntityPersister persister) {
-    return false;
-  }
-
+  
   @Override
   public boolean requiresPostCommitHandling(EntityPersister persister) {
     return false;
@@ -153,14 +149,13 @@ public class JfrListener implements
   }
 
   @Override
-  public void onRefresh(RefreshEvent event, Map refreshedAlready) {
+  public void onRefresh(RefreshEvent event, RefreshContext refreshedAlready) {
     this.onRefresh(event);
   }
 
   @Override
   public void onPostUpdate(PostUpdateEvent event) {
     // TODO Auto-generated method stub
-
   }
 
   @Override
@@ -253,9 +248,9 @@ public class JfrListener implements
     jfrEvent.entityName = event.getEntityName();
     jfrEvent.commit();
   }
-
+  
   @Override
-  public void onPersist(PersistEvent event, Map createdAlready) {
+  public void onPersist(PersistEvent event, PersistContext createdAlready) {
     this.onPersist(event);
   }
 
@@ -266,9 +261,9 @@ public class JfrListener implements
     jfrEvent.entityName = event.getEntityName();
     jfrEvent.commit();
   }
-
+  
   @Override
-  public void onMerge(MergeEvent event, Map copiedAlready) {
+  public void onMerge(MergeEvent event, MergeContext copiedAlready) {
     this.onMerge(event);
   }
 
@@ -335,7 +330,7 @@ public class JfrListener implements
   }
 
   @Override
-  public void onDelete(DeleteEvent event, Set transientEntities) {
+  public void onDelete(DeleteEvent event, DeleteContext transientEntities) {
     this.onDelete(event);
   }
 

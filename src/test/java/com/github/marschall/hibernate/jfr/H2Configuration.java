@@ -4,7 +4,6 @@ import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
@@ -20,6 +19,8 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.transaction.support.TransactionOperations;
 import org.springframework.transaction.support.TransactionTemplate;
+
+import jakarta.persistence.EntityManagerFactory;
 
 @Configuration
 public class H2Configuration {
