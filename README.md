@@ -3,6 +3,8 @@ Hibernate JFR [![Maven Central](https://maven-badges.herokuapp.com/maven-central
 
 A Hiberante listener that generates JFR events.
 
+Versions 2.x are for Hibernate 6, versions 1.x are for Hibernate 5.
+
 Usage
 -----
 
@@ -12,7 +14,7 @@ The project uses a Hibernate integrator so simply adding the dependency
 <dependency>
   <groupId>com.github.marschall</groupId>
   <artifactId>hibernate-jfr</artifactId>
-  <version>0.3.0</version>
+  <version>2.0.0</version>
 </dependency>
 ```
 
